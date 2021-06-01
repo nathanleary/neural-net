@@ -23,15 +23,15 @@ Todo:
 
 ## Install
 ```
-go get -u github.com/patrikeh/go-deep
+go get -u github.com/nathanleary/neural-net
 ```
 ## Usage
 Import the go-deep package
 ```go
 import (
 	"fmt"
-	deep "github.com/patrikeh/go-deep"
-	"github.com/patrikeh/go-deep/training"
+	deep "github.com/nathanleary/neural-net"
+	"github.com/nathanleary/neural-net/training"
 )
 ```
 
