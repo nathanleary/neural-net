@@ -1,4 +1,4 @@
-module github.com/patrikeh/go-deep
+module github.com/nathanleary/neural-net
 
 go 1.13
 

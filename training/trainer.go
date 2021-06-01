@@ -3,7 +3,7 @@ package training
 import (
 	"time"
 
-	deep "github.com/patrikeh/go-deep"
+	deep "github.com/nathanleary/neural-net"
 )
 
 // Trainer is a neural network trainer

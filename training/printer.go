@@ -6,7 +6,7 @@ import (
 	"text/tabwriter"
 	"time"
 
-	deep "github.com/patrikeh/go-deep"
+	deep "github.com/nathanleary/neural-net"
 )
 
 // StatsPrinter prints training progress

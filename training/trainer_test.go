@@ -2,11 +2,12 @@ package training
 
 import (
 	"fmt"
-	math "github.com/chewxy/math32"
 	"math/rand"
 	"testing"
 
-	deep "github.com/patrikeh/go-deep"
+	math "github.com/chewxy/math32"
+
+	deep "github.com/nathanleary/neural-net"
 	"github.com/stretchr/testify/assert"
 )
 
