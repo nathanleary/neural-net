@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/nathanleary/neural-net/training"
-	"github.com/patrikeh/go-deep"
+	"github.com/nathanleary/neural-net"
 )
 
 func main() {
