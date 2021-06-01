@@ -1,6 +1,6 @@
 **This is an edited version of the go-deep library except it has been converted to 32-bit for better performance and some extra activation functions have been added (Elu, Mish and Swish)**
 
-# go-deep
+# neural-net
 [![Go Report Card](https://goreportcard.com/badge/github.com/patrikeh/go-deep)](https://goreportcard.com/report/github.com/patrikeh/go-deep)
 [![Build Status](https://travis-ci.org/patrikeh/go-deep.svg?branch=master)](https://travis-ci.org/patrikeh/go-deep)
 [![Coverage Status](https://coveralls.io/repos/github/patrikeh/go-deep/badge.svg?branch=master)](https://coveralls.io/github/patrikeh/go-deep?branch=master)
