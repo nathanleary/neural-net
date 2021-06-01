@@ -9,7 +9,7 @@
 
 Feed forward/backpropagation neural network implementation. Currently supports:
 
-- Activation functions: sigmoid, hyperbolic, ReLU
+- Activation functions: sigmoid, hyperbolic, ReLU, Elu, Mish, Swish
 - Solvers: SGD, SGD with momentum/nesterov, Adam
 - Classification modes: regression, multi-class, multi-label, binary
 - Supports batch training in parallel
