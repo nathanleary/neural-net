@@ -113,14 +113,25 @@ type DoubleRoot struct {
 	Mem map[float32]float32
 }
 
+func Sqrt(N float32) float32 {
+	x := math.Pow(2, math.Ceil(numbits(N)/2))
+	for true {
+    		y = floor((x + floor(N/x))/2)
+		if y >= x  {
+        	  return x
+		}
+   		 x = y
+	}
+}
+
 // F is DoubleRoot(x)
 func (a DoubleRoot) F(x float32, training bool) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return math.Sqrt(0.25+x) - 0.5 //x + math.Sin(x)
+		return Sqrt(0.25+x) - 0.5 //x + math.Sin(x)
 	} else {
-		return 0.5 - math.Sqrt(0.25-x) //math.Sin(x)/100 - math.Sqrt(-x)
+		return 0.5 - Sqrt(0.25-x) //math.Sin(x)/100 - math.Sqrt(-x)
 	}
 }
 
@@ -129,9 +140,9 @@ func (a DoubleRoot) Df(x float32) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return 1 / (2 * math.Sqrt(0.25+x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
+		return 1 / (2 * Sqrt(0.25+x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
 	} else {
-		return 1 / (2 * math.Sqrt(0.25-x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
+		return 1 / (2 * Sqrt(0.25-x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
 	}
 }
 
@@ -145,7 +156,7 @@ func (a RootX) F(x float32, training bool) float32 {
 	if x >= 0 {
 		return x //x + math.Sin(x)
 	} else {
-		return 0.5 - math.Sqrt(0.25-x) //math.Sin(x)/100 - math.Sqrt(-x)
+		return 0.5 - Sqrt(0.25-x) //math.Sin(x)/100 - math.Sqrt(-x)
 	}
 }
 
@@ -154,7 +165,7 @@ func (a RootX) Df(x float32) float32 {
 	if x >= 0 {
 		return 1 //math.Cos(x) + 1
 	} else {
-		return 1 / (2 * math.Sqrt(0.25-x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
+		return 1 / (2 * Sqrt(0.25-x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
 	}
 }
 
