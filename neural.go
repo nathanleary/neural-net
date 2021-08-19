@@ -13,6 +13,7 @@ type Neural struct {
 
 // Config defines the network topology, activations, losses etc
 type Config struct {
+
 	// Number of inputs
 	Inputs int
 	// Defines topology:
@@ -21,7 +22,7 @@ type Config struct {
 	// containing 3 nodes.
 	Layout []int
 	// Activation functions: {ActivationTanh, ActivationReLU, ActivationSigmoid}
-	Activation ActivationType
+	Activation []ActivationType
 	// Solver modes: {ModeRegression, ModeBinary, ModeMultiClass, ModeMultiLabel}
 	Mode Mode
 	// Initializer for weights: {NewNormal(σ, μ), NewUniform(σ, μ)}
@@ -38,9 +39,10 @@ func NewNeural(c *Config) *Neural {
 	if c.Weight == nil {
 		c.Weight = NewUniform(0.5, 0)
 	}
-	if c.Activation == ActivationNone {
-		c.Activation = ActivationSigmoid
-	}
+	// if c.Activation == ActivationNone {
+	// taking this out...
+	// 	c.Activation = ActivationSigmoid
+	// }
 	if c.Loss == LossNone {
 		switch c.Mode {
 		case ModeMultiClass, ModeMultiLabel:
@@ -75,7 +77,7 @@ func NewNeural(c *Config) *Neural {
 func initializeLayers(c *Config) []*Layer {
 	layers := make([]*Layer, len(c.Layout))
 	for i := range layers {
-		act := c.Activation
+		act := c.Activation[i]
 		if i == (len(layers)-1) && c.Mode != ModeDefault {
 			act = OutputActivation(c.Mode)
 		}
