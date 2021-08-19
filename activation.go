@@ -46,10 +46,16 @@ func GetActivation(act ActivationType) Differentiable {
 		return Swish{}
 	case ActivationMish:
 		return Mish{}
+	case ActivationCustom:
+		return Custom{}
 	case ActivationLinear:
 		return Linear{}
 	case ActivationSoftmax:
 		return Linear{}
+	case ActivationDoubleRoot:
+		return DoubleRoot{}
+	case ActivationRootX:
+		return RootX{}
 	}
 	return Linear{}
 }
@@ -76,6 +82,12 @@ const (
 	ActivationSwish ActivationType = 7
 	// ActivationMish is a Mish activation
 	ActivationMish ActivationType = 8
+	// ActivationCustom is a Custom activation
+	ActivationCustom ActivationType = 9
+	// ActivationCustom is a Custom activation
+	ActivationDoubleRoot ActivationType = 10
+	// ActivationCustom is a Custom activation
+	ActivationRootX ActivationType = 11
 )
 
 // Differentiable is an activation function and its first order derivative,
@@ -95,6 +107,56 @@ func (a Sigmoid) F(x float32, training bool) float32 { return Logistic(x, 1) }
 
 // Df is Sigmoid'(y), where y = Sigmoid(x)
 func (a Sigmoid) Df(y float32) float32 { return y * (1 - y) }
+
+// DoubleRoot is a logistic activator in the special case of a = 1
+type DoubleRoot struct {
+	Mem map[float32]float32
+}
+
+// F is DoubleRoot(x)
+func (a DoubleRoot) F(x float32, training bool) float32 {
+	if x == 0 {
+		return 0
+	} else if x > 0 {
+		return math.Sqrt(0.25+x) - 0.5 //x + math.Sin(x)
+	} else {
+		return 0.5 - math.Sqrt(0.25-x) //math.Sin(x)/100 - math.Sqrt(-x)
+	}
+}
+
+// Df is DoubleRoot'(y), where y = DoubleRoot(x)
+func (a DoubleRoot) Df(x float32) float32 {
+	if x == 0 {
+		return 0
+	} else if x > 0 {
+		return 1 / (2 * math.Sqrt(0.25+x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
+	} else {
+		return 1 / (2 * math.Sqrt(0.25-x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
+	}
+}
+
+// RootX is a logistic activator in the special case of a = 1
+type RootX struct {
+	Mem map[float32]float32
+}
+
+// F is RootX(x)
+func (a RootX) F(x float32, training bool) float32 {
+	if x >= 0 {
+		return x //x + math.Sin(x)
+	} else {
+		return 0.5 - math.Sqrt(0.25-x) //math.Sin(x)/100 - math.Sqrt(-x)
+	}
+}
+
+// Df is DoubleRoot'(y), where y = DoubleRoot(x)
+func (a RootX) Df(x float32) float32 {
+	if x >= 0 {
+		return 1 //math.Cos(x) + 1
+	} else {
+		return 1 / (2 * math.Sqrt(0.25-x)) //math.Cos(x)/100 + 1/(2*math.Sqrt(-x))
+	}
+}
 
 // Logistic is the logistic function
 func Logistic(x, a float32) float32 {
@@ -210,6 +272,57 @@ func (a Mish) Df(y float32) float32 {
 	sigX := Logistic(x, 1)
 	xTanhSp := math.Tanh(math.Log(1 + math.Exp(x)))
 	return y * (xTanhSp + x*sigX*(1-xTanhSp*xTanhSp))
+
+}
+
+type Custom struct {
+	Mem map[float32]float32
+}
+
+var customF func(float32) float32
+var customDf func(float32, float32) float32
+
+func SetCustomF(F func(float32) float32) {
+	customF = F
+}
+
+func SetCustomDf(Df func(float32, float32) float32) {
+	customDf = Df
+}
+
+// F is Custom(x)
+func (a Custom) F(x float32, training bool) float32 {
+
+	if a.Mem == nil {
+		a.Mem = map[float32]float32{}
+	}
+
+	if customF != nil {
+		ans := customF(x)
+		if training {
+			a.Mem[ans] = x
+		}
+		return ans
+	} else {
+		ans := x
+		if training {
+			a.Mem[ans] = x
+		}
+		return x
+	}
+
+}
+
+// Df is Custom'(y), where y = Custom(x)
+func (a Custom) Df(y float32) float32 {
+	x := a.Mem[y]
+	delete(a.Mem, y)
+
+	if customDf != nil {
+		return customDf(y, x)
+	} else {
+		return x
+	}
 
 }
 
