@@ -4,7 +4,7 @@
 
 Feed forward/backpropagation neural network implementation. Currently supports:
 
-- Activation functions: sigmoid, hyperbolic, ReLU, Elu, Mish, Swish
+- Activation functions: sigmoid, hyperbolic, ReLU, Elu, Mish, Swish, also activations I created (RootX and DoubleRoot).. RootX is particularly effective.
 - Solvers: SGD, SGD with momentum/nesterov, Adam
 - Classification modes: regression, multi-class, multi-label, binary
 - Supports batch training in parallel
@@ -106,7 +106,3 @@ See ```training/trainer_test.go``` for a variety of toy examples of regression, 
 
 See ```examples/``` for more realistic examples:
 
-| Dataset | Topology | Epochs | Accuracy |
-| --- | --- | --- | --- |
-| wines | [5 5] | 10000 | ~98% |
-| mnist | [50] | 25 | ~97% |
