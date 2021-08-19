@@ -47,12 +47,14 @@ Create a network with two hidden layers of size 2 and 2 respectively:
 n := deep.NewNeural(&deep.Config{
 	/* Input dimensionality */
 	Inputs: 2,
-	/* Two hidden layers consisting of two neurons each, and a single output */
-	Layout: []int{2, 2, 1},
+	/* Three hidden layers consisting of two neurons each, and a single output */
+	Layout: []int{2, 2, 2, 1},
 	/* Activation functions: Sigmoid, Tanh, ReLU, Linear, Elu, Mish, Swish, RootX, DoubleRoot */
+	/*Defining the three hidden layer's Activation function*/
 	Activation: []deep.ActivationType{
 				deep.ActivationRootX,
 				deep.ActivationDoubleRoot,
+				deep.ActivationMish,
 			},
 	/* Determines output layer activation & loss function: 
 	ModeRegression: linear outputs with MSE loss
