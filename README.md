@@ -48,7 +48,7 @@ n := deep.NewNeural(&deep.Config{
 	/* Two hidden layers consisting of two neurons each, and a single output */
 	Layout: []int{2, 2, 1},
 	/* Activation functions: Sigmoid, Tanh, ReLU, Linear */
-	Activation: deep.ActivationSigmoid,
+	Activation: deep.ActivationRootX,
 	/* Determines output layer activation & loss function: 
 	ModeRegression: linear outputs with MSE loss
 	ModeMultiClass: softmax output with Cross Entropy loss
