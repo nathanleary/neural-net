@@ -114,14 +114,7 @@ type DoubleRoot struct {
 }
 
 func Sqrt(N float32) float32 {
-	x := math.Pow(2, math.Ceil(numbits(N)/2))
-	for true {
-    		y = floor((x + floor(N/x))/2)
-		if y >= x  {
-        	  return x
-		}
-   		 x = y
-	}
+	return math.Sqrt(N)
 }
 
 // F is DoubleRoot(x)
