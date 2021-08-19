@@ -1,5 +1,7 @@
 **This is an edited version of the go-deep library except it has been converted to 32-bit for better performance and some extra activation functions have been added (Elu, Mish and Swish, RootX and DoubleRoot)**
 
+Update: concurrency is now used more to increase performance.
+
 # neural-net
 
 Feed forward/backpropagation neural network implementation. Currently supports:
