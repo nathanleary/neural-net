@@ -77,9 +77,11 @@ func NewNeural(c *Config) *Neural {
 func initializeLayers(c *Config) []*Layer {
 	layers := make([]*Layer, len(c.Layout))
 	for i := range layers {
-		act := c.Activation[i]
+		act := ActivationLinear
 		if i == (len(layers)-1) && c.Mode != ModeDefault {
 			act = OutputActivation(c.Mode)
+		} else {
+			act = c.Activation[i]
 		}
 		layers[i] = NewLayer(c.Layout[i], act)
 	}
