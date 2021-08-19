@@ -97,14 +97,22 @@ func initializeLayers(c *Config) []*Layer {
 }
 
 func (n *Neural) fire(training bool) {
+
 	for _, b := range n.Biases {
+
 		for _, s := range b {
 			s.fire(1)
+
 		}
+
 	}
+
 	for _, l := range n.Layers {
+
 		l.fire(training)
+
 	}
+
 }
 
 // Forward computes a forward pass
@@ -112,11 +120,17 @@ func (n *Neural) Forward(input []float32, training bool) error {
 	if len(input) != n.Config.Inputs {
 		return fmt.Errorf("Invalid input dimension - expected: %d got: %d", n.Config.Inputs, len(input))
 	}
+
 	for _, n := range n.Layers[0].Neurons {
+
 		for i := 0; i < len(input); i++ {
+
 			n.In[i].fire(input[i])
+
 		}
+
 	}
+
 	n.fire(training)
 	return nil
 }
