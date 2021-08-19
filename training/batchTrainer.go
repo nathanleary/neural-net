@@ -178,20 +178,38 @@ func (t *BatchTrainer) calculateDeltas(n *deep.Neural, ideal []float32, wid int)
 }
 
 func (t *BatchTrainer) update(n *deep.Neural, it int) {
-	var idx int
+	// var idx int
+
+	mut := sync.Mutex{}
+	ch := make(chan bool, len(n.Layers))
 	for i, l := range n.Layers {
-		iAD := t.accumulatedDeltas[i]
-		for j, n := range l.Neurons {
-			jAD := iAD[j]
-			for k, s := range n.In {
-				update := t.solver.Update(s.Weight,
-					jAD[k],
-					it,
-					idx)
-				s.Weight += update
-				jAD[k] = 0
-				idx++
+		go func(l *deep.Layer, i int) {
+			idx := i
+			iAD := t.accumulatedDeltas[i]
+			for j, n := range l.Neurons {
+				jAD := iAD[j]
+				for k, s := range n.In {
+
+					update := t.solver.Update(s.Weight,
+						jAD[k],
+						it,
+						idx)
+
+					mut.Lock()
+					s.Weight += update
+					mut.Unlock()
+
+					jAD[k] = 0
+
+					idx++
+				}
 			}
-		}
+
+			ch <- false
+		}(l, i)
+	}
+
+	for <-ch {
+
 	}
 }
