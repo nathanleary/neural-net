@@ -1,4 +1,4 @@
-**This is an edited version of the go-deep library except it has been converted to 32-bit for better performance and some extra activation functions have been added (Elu, Mish and Swish)**
+**This is an edited version of the go-deep library except it has been converted to 32-bit for better performance and some extra activation functions have been added (Elu, Mish and Swish, RootX and DoubleRoot)**
 
 # neural-net
 
