@@ -26,18 +26,30 @@ func NewLayer(n int, activation ActivationType) *Layer {
 }
 
 func (l *Layer) fire(training bool) {
+	ch := make(chan bool, len(l.Neurons))
 	for _, n := range l.Neurons {
-		n.fire(training)
+		go func(n *Neuron) {
+			n.fire(training)
+			ch <- false
+		}(n)
 	}
+
+	for x := 0; x < len(l.Neurons); x++ {
+		<-ch
+	}
+
 	if l.A == ActivationSoftmax {
+
 		outs := make([]float32, len(l.Neurons))
 		for i, neuron := range l.Neurons {
 			outs[i] = neuron.Value
 		}
+
 		sm := Softmax(outs)
 		for i, neuron := range l.Neurons {
 			neuron.Value = sm[i]
 		}
+
 	}
 }
 
