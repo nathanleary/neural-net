@@ -71,6 +71,7 @@ func (t *BatchTrainer) Train(n *deep.Neural, examples, validation Examples, iter
 	nets := make([]*deep.Neural, t.parallelism)
 
 	wg := sync.WaitGroup{}
+
 	for i := 0; i < t.parallelism; i++ {
 		nets[i] = deep.NewNeural(n.Config)
 
@@ -99,15 +100,18 @@ func (t *BatchTrainer) Train(n *deep.Neural, examples, validation Examples, iter
 			}
 
 			wg.Add(len(b))
+
 			for _, item := range b {
 				workCh <- item
 			}
 			wg.Wait()
-			wg.Add(len(t.partialDeltas))
+
+			ch := make(chan bool, len(t.partialDeltas))
+
 			for _, wPD := range t.partialDeltas {
 
 				go func(wPD [][][]float32) {
-					defer wg.Done()
+
 					for i, iPD := range wPD {
 						iAD := t.accumulatedDeltas[i]
 						for j, jPD := range iPD {
@@ -118,10 +122,13 @@ func (t *BatchTrainer) Train(n *deep.Neural, examples, validation Examples, iter
 							}
 						}
 					}
+					ch <- false
 				}(wPD)
 			}
 
-			wg.Wait()
+			for _, _ = range t.partialDeltas {
+				<-ch
+			}
 
 			t.update(n, it)
 		}
