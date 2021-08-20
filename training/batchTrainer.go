@@ -95,7 +95,7 @@ func FilterNoise(n *deep.Neural, examples Examples, Significance, Shift float32)
 			n.Shift[ri] += Shift * ra
 			updAcc := crossValidate(n, train)
 
-			if acc < updAcc {
+			if acc <= updAcc {
 				n.Shift[ri] -= Shift * ra
 				return acc
 			} else {
@@ -107,7 +107,7 @@ func FilterNoise(n *deep.Neural, examples Examples, Significance, Shift float32)
 			n.Significance[ri] += Significance * ra
 			updAcc := crossValidate(n, train)
 
-			if acc < updAcc {
+			if acc <= updAcc {
 				n.Significance[ri] -= Significance * ra
 				return acc
 			} else {
