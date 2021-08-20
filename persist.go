@@ -6,8 +6,10 @@ import (
 
 // Dump is a neural network dump
 type Dump struct {
-	Config  *Config
-	Weights [][][]float32
+	Config       *Config
+	Weights      [][][]float32
+	Significance []float32
+	Shift        []float32
 }
 
 // ApplyWeights sets the weights from a three-dimensional slice
@@ -39,8 +41,10 @@ func (n Neural) Weights() [][][]float32 {
 // Dump generates a network dump
 func (n Neural) Dump() *Dump {
 	return &Dump{
-		Config:  n.Config,
-		Weights: n.Weights(),
+		Config:       n.Config,
+		Weights:      n.Weights(),
+		Significance: n.Significance,
+		Shift:        n.Shift,
 	}
 }
 
@@ -48,7 +52,8 @@ func (n Neural) Dump() *Dump {
 func FromDump(dump *Dump) *Neural {
 	n := NewNeural(dump.Config)
 	n.ApplyWeights(dump.Weights)
-
+	n.Significance = dump.Significance
+	n.Shift = dump.Shift
 	return n
 }
 
