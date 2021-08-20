@@ -66,6 +66,9 @@ n := deep.NewNeural(&deep.Config{
 	Weight: deep.NewNormal(1.0, 0.0),
 	/* Apply bias */
 	Bias: true,
+	/*Significance and shift are training variables to help improve accuracy and remove noise from the input variables*/
+	Significance: 0.01,
+	Shift:        0.01,
 })
 ```
 Train:
