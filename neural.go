@@ -33,10 +33,6 @@ type Config struct {
 	Loss LossType
 	// Apply bias nodes
 	Bias bool
-	// this is a training variable to help decide on the amount of significance any input variable has when training
-	Significance float32
-	// this is a training variable that adds a constant number to each input variable to shift the number up or down
-	Shift float32
 }
 
 // NewNeural returns a new neural network
