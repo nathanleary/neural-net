@@ -6,9 +6,11 @@ import (
 
 // Neural is a neural network
 type Neural struct {
-	Layers []*Layer
-	Biases [][]*Synapse
-	Config *Config
+	Shift        []float32
+	Significance []float32
+	Layers       []*Layer
+	Biases       [][]*Synapse
+	Config       *Config
 }
 
 // Config defines the network topology, activations, losses etc
@@ -31,6 +33,10 @@ type Config struct {
 	Loss LossType
 	// Apply bias nodes
 	Bias bool
+	// this is a training variable to help decide on the amount of significance any input variable has when training
+	Significance float32
+	// this is a training variable that adds a constant number to each input variable to shift the number up or down
+	Shift float32
 }
 
 // NewNeural returns a new neural network
@@ -67,10 +73,20 @@ func NewNeural(c *Config) *Neural {
 		}
 	}
 
+	significance := make([]float32, c.Inputs)
+	shift := make([]float32, c.Inputs)
+
+	for i, _ := range significance {
+		significance[i] = 1.0
+		shift[i] = 0.0
+	}
+
 	return &Neural{
-		Layers: layers,
-		Biases: biases,
-		Config: c,
+		Shift:        shift,
+		Significance: significance,
+		Layers:       layers,
+		Biases:       biases,
+		Config:       c,
 	}
 }
 
@@ -125,11 +141,11 @@ func (n *Neural) Forward(input []float32, training bool) error {
 		return fmt.Errorf("Invalid input dimension - expected: %d got: %d", n.Config.Inputs, len(input))
 	}
 
-	for _, n := range n.Layers[0].Neurons {
+	for _, nrn := range n.Layers[0].Neurons {
 
 		for i := 0; i < len(input); i++ {
 
-			n.In[i].fire(input[i])
+			nrn.In[i].fire((input[i] + n.Shift[i]) * n.Significance[i])
 
 		}
 
