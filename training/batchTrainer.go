@@ -1,11 +1,14 @@
 package training
 
 import (
+	"math/rand"
 	"sync"
 	"time"
 
 	deep "github.com/nathanleary/neural-net"
 )
+
+var random = rand.New(rand.NewSource(0))
 
 // BatchTrainer implements parallelized batch training
 type BatchTrainer struct {
@@ -62,6 +65,7 @@ func NewBatchTrainer(solver Solver, verbosity, batchSize, parallelism int) *Batc
 
 // Train trains n
 func (t *BatchTrainer) Train(n *deep.Neural, examples, validation Examples, iterations int) {
+
 	t.internalb = newBatchTraining(n.Layers, t.parallelism)
 
 	train := make(Examples, len(examples))
@@ -90,6 +94,7 @@ func (t *BatchTrainer) Train(n *deep.Neural, examples, validation Examples, iter
 
 	ts := time.Now()
 	for it := 1; it <= iterations; it++ {
+
 		train.Shuffle()
 		batches := train.SplitSize(t.batchSize)
 
@@ -131,6 +136,43 @@ func (t *BatchTrainer) Train(n *deep.Neural, examples, validation Examples, iter
 			}
 
 			t.update(n, it)
+
+		}
+
+		if n.Config.Shift != 0.0 || n.Config.Significance != 0.0 {
+			// base copy
+			acc := accuracy(n, train)
+
+			// update
+			ri := random.Intn(n.Config.Inputs)
+			rf := random.Float32()
+			ra := random.Float32()*2.0 - 1.0
+
+			if n.Config.Significance == 0.0 {
+				rf = 1.0
+			} else if n.Config.Shift == 0.0 {
+				rf = 0.0
+			}
+
+			if rf > 0.5 {
+
+				n.Shift[ri] += n.Config.Shift * ra
+				updAcc := accuracy(n, train)
+
+				if acc > updAcc {
+					n.Shift[ri] -= n.Config.Shift * ra
+				}
+
+			} else {
+
+				n.Significance[ri] += n.Config.Significance * ra
+				updAcc := accuracy(n, train)
+
+				if acc > updAcc {
+					n.Significance[ri] -= n.Config.Significance * ra
+				}
+
+			}
 		}
 
 		if t.verbosity > 0 && it%t.verbosity == 0 && len(validation) > 0 {
