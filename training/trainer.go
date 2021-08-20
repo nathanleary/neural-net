@@ -60,42 +60,6 @@ func (t *OnlineTrainer) Train(n *deep.Neural, examples, validation Examples, ite
 			t.learn(n, examples[j], i)
 		}
 
-		if n.Config.Shift != 0.0 || n.Config.Significance != 0.0 {
-			// base copy
-			acc := accuracy(n, train)
-
-			// update
-			ri := random.Intn(n.Config.Inputs)
-			rf := random.Float32()
-			ra := random.Float32()*2.0 - 1.0
-
-			if n.Config.Significance == 0.0 {
-				rf = 1.0
-			} else if n.Config.Shift == 0.0 {
-				rf = 0.0
-			}
-
-			if rf > 0.5 {
-
-				n.Shift[ri] += n.Config.Shift * ra
-				updAcc := accuracy(n, train)
-
-				if acc > updAcc {
-					n.Shift[ri] -= n.Config.Shift * ra
-				}
-
-			} else {
-
-				n.Significance[ri] += n.Config.Significance * ra
-				updAcc := accuracy(n, train)
-
-				if acc > updAcc {
-					n.Significance[ri] -= n.Config.Significance * ra
-				}
-
-			}
-		}
-
 		if t.verbosity > 0 && i%t.verbosity == 0 && len(validation) > 0 {
 			t.printer.PrintProgress(n, validation, time.Since(ts), i)
 		}
