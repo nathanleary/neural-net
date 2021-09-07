@@ -56,8 +56,8 @@ func GetActivation(act ActivationType) Differentiable {
 		return DoubleRoot{}
 	case ActivationRootX:
 		return RootX{}
-	case ActivationMulDiv:
-		return MulDiv{}
+	case ActivationDivX:
+		return DivX{}
 	case ActivationDoubleDiv:
 		return DoubleDiv{}
 	case ActivationRootPow:
@@ -97,7 +97,7 @@ const (
 	// ActivationCustom is a Custom activation
 	ActivationRootX ActivationType = 11
 	// ActivationMulDiv is a Custom activation
-	ActivationMulDiv ActivationType = 12
+	ActivationDivX ActivationType = 12
 	// ActivationMulDiv is a Custom activation
 	ActivationDoubleDiv ActivationType = 13
 	// ActivationMulDiv is a Custom activation
@@ -241,12 +241,12 @@ func (a RootX) Df(x float32) float32 {
 }
 
 // MulDiv is a logistic activator in the special case of a = 1
-type MulDiv struct {
+type DivX struct {
 	Mem map[float32]float32
 }
 
 // F is MulDiv(x)
-func (a MulDiv) F(x float32, training bool) float32 {
+func (a DivX) F(x float32, training bool) float32 {
 	if x >= 0 {
 		return x 
 	} else {
@@ -255,7 +255,7 @@ func (a MulDiv) F(x float32, training bool) float32 {
 }
 
 // Df is MulDiv'(y), where y = MulDiv(x)
-func (a MulDiv) Df(x float32) float32 {
+func (a DivX) Df(x float32) float32 {
 	if x >= 0 {
 		return 1 
 	} else {
