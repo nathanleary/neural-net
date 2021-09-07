@@ -60,6 +60,8 @@ func GetActivation(act ActivationType) Differentiable {
 		return MulDiv{}
 	case ActivationDoubleDiv:
 		return DoubleDiv{}
+	case ActivationRootPow:
+		return RootPow{}
 	}
 	return Linear{}
 }
@@ -96,6 +98,8 @@ const (
 	ActivationMulDiv ActivationType = 12
 	// ActivationMulDiv is a Custom activation
 	ActivationDoubleDiv ActivationType = 13
+	// ActivationMulDiv is a Custom activation
+	ActivationRootPow ActivationType = 14
 	
 )
 
@@ -149,12 +153,12 @@ func (a DoubleRoot) Df(x float32) float32 {
 }
 
 // RootX is a logistic activator in the special case of a = 1
-type RootX struct {
+type RootPow struct {
 	Mem map[float32]float32
 }
 
 // F is RootX(x)
-func (a RootX) F(x float32, training bool) float32 {
+func (a RootPow) F(x float32, training bool) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
@@ -165,11 +169,38 @@ func (a RootX) F(x float32, training bool) float32 {
 }
 
 // Df is DoubleRoot'(y), where y = DoubleRoot(x)
-func (a RootX) Df(x float32) float32 {
+func (a RootPow) Df(x float32) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
 		return (2 * x) + 1
+	} else {
+		return 1 / (2 * Sqrt(0.25-x)) 
+	}
+}
+
+// RootX is a logistic activator in the special case of a = 1
+type RootX struct {
+	Mem map[float32]float32
+}
+
+// F is RootX(x)
+func (a RootX) F(x float32, training bool) float32 {
+	if x == 0 {
+		return 0
+	} else if x > 0 {
+		return x
+	} else {
+		return 0.5 - Sqrt(0.25-x) 
+	}
+}
+
+// Df is DoubleRoot'(y), where y = DoubleRoot(x)
+func (a RootX) Df(x float32) float32 {
+	if x == 0 {
+		return 0
+	} else if x > 0 {
+		return  1
 	} else {
 		return 1 / (2 * Sqrt(0.25-x)) 
 	}
