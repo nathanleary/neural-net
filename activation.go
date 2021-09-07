@@ -141,9 +141,9 @@ func (a DoubleRoot) F(x float32, training bool) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return Sqrt(0.25+x) - 0.5 
+		return Sqrt(x)
 	} else {
-		return 0.5 - Sqrt(0.25-x) 
+		return -Sqrt(-x)
 	}
 }
 
@@ -152,9 +152,9 @@ func (a DoubleRoot) Df(x float32) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return 1 / (2 * Sqrt(0.25+x)) 
+		return 1 / (2 * Sqrt(x)) 
 	} else {
-		return 1 / (2 * Sqrt(0.25-x)) 
+		return 1 / (2 * Sqrt(-x)) 
 	}
 }
 
