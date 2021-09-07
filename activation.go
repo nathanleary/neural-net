@@ -203,7 +203,7 @@ type DoubleDiv struct {
 func (a DoubleDiv) F(x float32, training bool) float32 {
 	
 	if x == 0 {
-		
+		return 0
 	} else if x > 0 {
 		return (1 / (x+1) - 1) * -1
 	} else {
@@ -215,7 +215,7 @@ func (a DoubleDiv) F(x float32, training bool) float32 {
 // Df is MulDiv'(y), where y = MulDiv(x)
 func (a DoubleDiv) Df(x float32) float32 {
 	if x == 0 {
-		
+		return 0
 	} else if x > 0 {
 		return (1 / ((x+1)*(x+1))) 
 	} else {
