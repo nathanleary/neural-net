@@ -57,7 +57,7 @@ func GetActivation(act ActivationType) Differentiable {
 	case ActivationRootX:
 		return RootX{}
 	case ActivationMulDiv:
-		return RootX{}
+		return MulDiv{}
 	}
 	return Linear{}
 }
