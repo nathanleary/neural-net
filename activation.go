@@ -156,7 +156,7 @@ type RootX struct {
 // F is RootX(x)
 func (a RootX) F(x float32, training bool) float32 {
 	if x >= 0 {
-		return x 
+		return ((x+0.5)*(x+0.5))-0.25
 	} else {
 		return 0.5 - Sqrt(0.25-x) 
 	}
@@ -165,7 +165,7 @@ func (a RootX) F(x float32, training bool) float32 {
 // Df is DoubleRoot'(y), where y = DoubleRoot(x)
 func (a RootX) Df(x float32) float32 {
 	if x >= 0 {
-		return 1 
+		return (2 * x) + 1
 	} else {
 		return 1 / (2 * Sqrt(0.25-x)) 
 	}
