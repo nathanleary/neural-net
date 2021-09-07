@@ -62,6 +62,8 @@ func GetActivation(act ActivationType) Differentiable {
 		return DoubleDiv{}
 	case ActivationRootPow:
 		return RootPow{}
+	case ActivationDoublePow:
+		return RootPow{}
 	}
 	return Linear{}
 }
@@ -100,6 +102,8 @@ const (
 	ActivationDoubleDiv ActivationType = 13
 	// ActivationMulDiv is a Custom activation
 	ActivationRootPow ActivationType = 14
+	// ActivationMulDiv is a Custom activation
+	ActivationDoublePow ActivationType = 15
 	
 )
 
@@ -121,13 +125,15 @@ func (a Sigmoid) F(x float32, training bool) float32 { return Logistic(x, 1) }
 // Df is Sigmoid'(y), where y = Sigmoid(x)
 func (a Sigmoid) Df(y float32) float32 { return y * (1 - y) }
 
-// DoubleRoot is a logistic activator in the special case of a = 1
-type DoubleRoot struct {
-	Mem map[float32]float32
-}
+
 
 func Sqrt(N float32) float32 {
 	return math.Sqrt(N)
+}
+
+// DoubleRoot is a logistic activator in the special case of a = 1
+type DoubleRoot struct {
+	Mem map[float32]float32
 }
 
 // F is DoubleRoot(x)
@@ -149,6 +155,34 @@ func (a DoubleRoot) Df(x float32) float32 {
 		return 1 / (2 * Sqrt(0.25+x)) 
 	} else {
 		return 1 / (2 * Sqrt(0.25-x)) 
+	}
+}
+
+
+// RootX is a logistic activator in the special case of a = 1
+type DoublePow struct {
+	Mem map[float32]float32
+}
+
+// F is RootX(x)
+func (a DoublePow) F(x float32, training bool) float32 {
+	if x == 0 {
+		return 0
+	} else if x > 0 {
+		return x*x
+	} else {
+		return x*(-x)
+	}
+}
+
+// Df is DoubleRoot'(y), where y = DoubleRoot(x)
+func (a DoublePow) Df(x float32) float32 {
+	if x == 0 {
+		return 0
+	} else if x > 0 {
+		return (2 * x)
+	} else {
+		return -(2 * x)
 	}
 }
 
