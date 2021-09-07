@@ -181,7 +181,7 @@ func (a MulDiv) F(x float32, training bool) float32 {
 	if x >= 0 {
 		return x 
 	} else {
-		return 1 / (x-1) + 1 
+		return (1 / (x-1) + 1) * -1
 	}
 }
 
@@ -190,7 +190,7 @@ func (a MulDiv) Df(x float32) float32 {
 	if x >= 0 {
 		return 1 
 	} else {
-		return -(1 / ((x-1)*(x-1)))
+		return (1 / ((x-1)*(x-1))) 
 	}
 }
 
