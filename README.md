@@ -1,4 +1,4 @@
-**This is an edited version of the go-deep library except it has been converted to 32-bit for better performance and some extra activation functions have been added (Elu, Mish and Swish, RootX and DoubleRoot)**
+**This is an edited version of the go-deep library except it has been converted to 32-bit for better performance and some extra activation functions have been added (Elu, Mish and Swish, RootX, MulDiv and DoubleRoot)**
 
 Update: concurrency is now used more to increase performance and enabled multiple activation functions in the one network. (one activation function type per layer)
 
@@ -7,6 +7,7 @@ Update: concurrency is now used more to increase performance and enabled multipl
 Feed forward/backpropagation neural network implementation. Currently supports:
 
 - Activation functions: sigmoid, hyperbolic, ReLU, Elu, Mish, Swish, also activations I created (RootX and DoubleRoot).. RootX is particularly effective.
+- MulDiv was designed by combining Relu with division to help the neurl networks solve mathematical equations
 - Solvers: SGD, SGD with momentum/nesterov, Adam
 - Classification modes: regression, multi-class, multi-label, binary
 - Supports batch training in parallel
@@ -48,10 +49,11 @@ n := deep.NewNeural(&deep.Config{
 	/* Input dimensionality */
 	Inputs: 2,
 	/* Three hidden layers consisting of two neurons each, and a single output */
-	Layout: []int{2, 2, 2, 1},
+	Layout: []int{2, 2, 2, 2, 1},
 	/* Activation functions: Sigmoid, Tanh, ReLU, Linear, Elu, Mish, Swish, RootX, DoubleRoot */
 	/*Defining the three hidden layer's Activation function*/
 	Activation: []deep.ActivationType{
+				deep.ActivationMulDiv,
 				deep.ActivationRootX,
 				deep.ActivationDoubleRoot,
 				deep.ActivationMish,
