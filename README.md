@@ -7,7 +7,8 @@ Update: concurrency is now used more to increase performance and enabled multipl
 Feed forward/backpropagation neural network implementation. Currently supports:
 
 - Activation functions: sigmoid, hyperbolic, ReLU, Elu, Mish, Swish, also activations I created (RootX, DivX, DoublePow, DoubleRoot and DoubleDiv).. RootX is particularly effective.
-- I designed DivX, DoubleDiv, DoubleRoot & RootX to help the neural networks solve mathematical equations
+- I designed DoubleDiv, DoublePow & DoubleRoot to help the neural networks solve mathematical equations, usually used with the linea activation function
+- RootX seems to solve problems facter than Mish and Swish
 - Solvers: SGD, SGD with momentum/nesterov, Adam
 - Classification modes: regression, multi-class, multi-label, binary
 - Supports batch training in parallel
