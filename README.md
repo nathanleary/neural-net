@@ -8,7 +8,7 @@ Feed forward/backpropagation neural network implementation. Currently supports:
 
 - Activation functions: sigmoid, hyperbolic, ReLU, Elu, Mish, Swish, also activations I created (RootX, DivX, DoublePow, DoubleRoot and DoubleDiv).. RootX is particularly effective.
 - I designed DoubleDiv, DoublePow & DoubleRoot to help the neural networks solve mathematical equations, usually used with the linea activation function
-- RootX seems to solve problems facter than Mish and Swish
+- RootX (combining sqrt with relu) seems to solve problems facter than Mish and Swish... Still testing DivX (combining division with relu) but should produce similar results to RootX
 - Solvers: SGD, SGD with momentum/nesterov, Adam
 - Classification modes: regression, multi-class, multi-label, binary
 - Supports batch training in parallel
