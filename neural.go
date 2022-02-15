@@ -72,10 +72,10 @@ func NewNeural(c *Config) *Neural {
 // 	significance := make([]float32, c.Inputs)
 // 	shift := make([]float32, c.Inputs)
 
-	for i, _ := range significance {
-		significance[i] = 1.0
-		shift[i] = 0.0
-	}
+// 	for i, _ := range significance {
+// 		significance[i] = 1.0
+// 		shift[i] = 0.0
+// 	}
 
 	return &Neural{
 // 		Shift:        shift,
