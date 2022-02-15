@@ -6,8 +6,8 @@ import (
 
 // Neural is a neural network
 type Neural struct {
-	Shift        []float32
-	Significance []float32
+// 	Shift        []float32
+// 	Significance []float32
 	Layers       []*Layer
 	Biases       [][]*Synapse
 	Config       *Config
@@ -78,8 +78,8 @@ func NewNeural(c *Config) *Neural {
 	}
 
 	return &Neural{
-		Shift:        shift,
-		Significance: significance,
+// 		Shift:        shift,
+// 		Significance: significance,
 		Layers:       layers,
 		Biases:       biases,
 		Config:       c,
@@ -140,8 +140,8 @@ func (n *Neural) Forward(input []float32, training bool) error {
 	for _, nrn := range n.Layers[0].Neurons {
 
 		for i := 0; i < len(input); i++ {
-
-			nrn.In[i].fire((input[i] + n.Shift[i]) * n.Significance[i])
+			nrn.In[i].fire(input[i])
+// 			nrn.In[i].fire((input[i] + n.Shift[i]) * n.Significance[i])
 
 		}
 
