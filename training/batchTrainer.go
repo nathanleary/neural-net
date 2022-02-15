@@ -70,55 +70,55 @@ func CalculateLoss(n *deep.Neural, examples Examples) float32 {
 	return crossValidate(n, train)
 }
 
-func FilterNoise(n *deep.Neural, examples Examples, Significance, Shift float32) float32 {
+// func FilterNoise(n *deep.Neural, examples Examples, Significance, Shift float32) float32 {
 
-	train := make(Examples, len(examples))
-	copy(train, examples)
+// 	train := make(Examples, len(examples))
+// 	copy(train, examples)
 
-	if Shift != 0.0 || Significance != 0.0 {
-		// base copy
-		acc := crossValidate(n, train)
+// 	if Shift != 0.0 || Significance != 0.0 {
+// 		// base copy
+// 		acc := crossValidate(n, train)
 
-		// update
-		ri := random.Intn(n.Config.Inputs)
-		rf := random.Float32()
-		ra := random.Float32()*2.0 - 1.0
+// 		// update
+// 		ri := random.Intn(n.Config.Inputs)
+// 		rf := random.Float32()
+// 		ra := random.Float32()*2.0 - 1.0
 
-		if Significance == 0.0 {
-			rf = 1.0
-		} else if Shift == 0.0 {
-			rf = 0.0
-		}
+// 		if Significance == 0.0 {
+// 			rf = 1.0
+// 		} else if Shift == 0.0 {
+// 			rf = 0.0
+// 		}
 
-		if rf > 0.5 {
+// 		if rf > 0.5 {
 
-			n.Shift[ri] += Shift * ra
-			updAcc := crossValidate(n, train)
+// 			n.Shift[ri] += Shift * ra
+// 			updAcc := crossValidate(n, train)
 
-			if acc <= updAcc {
-				n.Shift[ri] -= Shift * ra
-				return acc
-			} else {
-				return updAcc
-			}
+// 			if acc <= updAcc {
+// 				n.Shift[ri] -= Shift * ra
+// 				return acc
+// 			} else {
+// 				return updAcc
+// 			}
 
-		} else {
+// 		} else {
 
-			n.Significance[ri] += Significance * ra
-			updAcc := crossValidate(n, train)
+// 			n.Significance[ri] += Significance * ra
+// 			updAcc := crossValidate(n, train)
 
-			if acc <= updAcc {
-				n.Significance[ri] -= Significance * ra
-				return acc
-			} else {
-				return updAcc
-			}
+// 			if acc <= updAcc {
+// 				n.Significance[ri] -= Significance * ra
+// 				return acc
+// 			} else {
+// 				return updAcc
+// 			}
 
-		}
-	}
+// 		}
+// 	}
 
-	return -1.0
-}
+// 	return -1.0
+// }
 
 // Train trains n
 func (t *BatchTrainer) Train(n *deep.Neural, examples, validation Examples, iterations int) {
