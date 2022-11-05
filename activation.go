@@ -425,7 +425,7 @@ func (a RootSwish) Df(y float32) float32 {
 	ey1 := ey+1
 	return (ey*(ey1+y))/(ey1*ey1)
 	} else {
-	1 / (2*math.Sqrt(1-(2*y)))
+	return 1 / (2*math.Sqrt(1-(2*y)))
 	}
 	
 
