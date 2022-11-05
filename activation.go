@@ -44,6 +44,8 @@ func GetActivation(act ActivationType) Differentiable {
 		return eLU{}
 	case ActivationSwish:
 		return Swish{}
+		case ActivationRootSwish:
+		return RootSwish{}
 	case ActivationMish:
 		return Mish{}
 	case ActivationCustom:
@@ -104,6 +106,8 @@ const (
 	ActivationRootPow ActivationType = 14
 	// ActivationMulDiv is a Custom activation
 	ActivationDoublePow ActivationType = 15
+	// ActivationMulDiv is a Custom activation
+	ActivationRootSwish ActivationType = 16
 	
 )
 
@@ -361,23 +365,69 @@ type Swish struct {
 
 // F is Swish(x)
 func (a Swish) F(x float32, training bool) float32 {
-	if a.Mem == nil {
-		a.Mem = map[float32]float32{}
-	}
-	ans := x * Logistic(x, 1)
-	if training {
-		a.Mem[ans] = x
-	}
-	return ans
+// 	if a.Mem == nil {
+// 		a.Mem = map[float32]float32{}
+// 	}
+// 	ans := x * Logistic(x, 1)
+// 	if training {
+// 		a.Mem[ans] = x
+// 	}
+// 	return ans
+	
+	return x/(math.Exp(-x)+1)
 
 }
 
 // Df is swish'(y), where y = Swish(x)
 func (a Swish) Df(y float32) float32 {
-	x := a.Mem[y]
-	delete(a.Mem, y)
-	sigX := Logistic(x, 1)
-	return y * (sigX * (1 + x*(1-sigX)))
+// 	x := a.Mem[y]
+// 	delete(a.Mem, y)
+// 	sigX := Logistic(x, 1)
+// 	return y * (sigX * (1 + x*(1-sigX)))
+	ey := math.Exp(y)
+	ey1 := ey+1
+	return (ey*(ey1+y))/(ey1*ey1)
+	
+
+}
+
+type RootSwish struct {
+	Mem map[float32]float32
+}
+
+// F is Swish(x)
+func (a RootSwish) F(x float32, training bool) float32 {
+// 	if a.Mem == nil {
+// 		a.Mem = map[float32]float32{}
+// 	}
+// 	ans := x * Logistic(x, 1)
+// 	if training {
+// 		a.Mem[ans] = x
+// 	}
+// 	return ans
+	if (x > 0) {
+		
+	return x/(math.Exp(-x)+1)
+	} else {
+		return 0.5 - math.sqrt(0.25- (0.5*x))	
+	}
+
+}
+
+// Df is swish'(y), where y = Swish(x)
+func (a RootSwish) Df(y float32) float32 {
+// 	x := a.Mem[y]
+// 	delete(a.Mem, y)
+// 	sigX := Logistic(x, 1)
+// 	return y * (sigX * (1 + x*(1-sigX)))
+	if (y > 0) {
+	ey := math.Exp(y)
+	ey1 := ey+1
+	return (ey*(ey1+y))/(ey1*ey1)
+	} else {
+	1 / (2*math.Sqrt(1-(2*y)))
+	}
+	
 
 }
 
