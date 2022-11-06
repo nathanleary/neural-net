@@ -44,7 +44,7 @@ func GetActivation(act ActivationType) Differentiable {
 		return eLU{}
 	case ActivationSwish:
 		return Swish{}
-		case ActivationRootSwish:
+	case ActivationRootSwish:
 		return RootSwish{}
 	case ActivationMish:
 		return Mish{}
@@ -108,7 +108,6 @@ const (
 	ActivationDoublePow ActivationType = 15
 	// ActivationMulDiv is a Custom activation
 	ActivationRootSwish ActivationType = 16
-	
 )
 
 // Differentiable is an activation function and its first order derivative,
@@ -128,8 +127,6 @@ func (a Sigmoid) F(x float32, training bool) float32 { return Logistic(x, 1) }
 
 // Df is Sigmoid'(y), where y = Sigmoid(x)
 func (a Sigmoid) Df(y float32) float32 { return y * (1 - y) }
-
-
 
 func Sqrt(N float32) float32 {
 	return math.Sqrt(N)
@@ -156,12 +153,11 @@ func (a DoubleRoot) Df(x float32) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return 1 / (2 * Sqrt(x)) 
+		return 1 / (2 * Sqrt(x))
 	} else {
-		return 1 / (2 * Sqrt(-x)) 
+		return 1 / (2 * Sqrt(-x))
 	}
 }
-
 
 // RootX is a logistic activator in the special case of a = 1
 type DoublePow struct {
@@ -173,9 +169,9 @@ func (a DoublePow) F(x float32, training bool) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return x*x
+		return x * x
 	} else {
-		return x*(-x)
+		return x * (-x)
 	}
 }
 
@@ -200,9 +196,9 @@ func (a RootPow) F(x float32, training bool) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return ((x+0.5)*(x+0.5))-0.25
+		return ((x + 0.5) * (x + 0.5)) - 0.25
 	} else {
-		return 0.5 - Sqrt(0.25-x) 
+		return 0.5 - Sqrt(0.25-x)
 	}
 }
 
@@ -213,7 +209,7 @@ func (a RootPow) Df(x float32) float32 {
 	} else if x > 0 {
 		return (2 * x) + 1
 	} else {
-		return 1 / (2 * Sqrt(0.25-x)) 
+		return 1 / (2 * Sqrt(0.25-x))
 	}
 }
 
@@ -229,7 +225,7 @@ func (a RootX) F(x float32, training bool) float32 {
 	} else if x > 0 {
 		return x
 	} else {
-		return 0.5 - Sqrt(0.25-x) 
+		return 0.5 - Sqrt(0.25-x)
 	}
 }
 
@@ -238,9 +234,9 @@ func (a RootX) Df(x float32) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return  1
+		return 1
 	} else {
-		return 1 / (2 * Sqrt(0.25-x)) 
+		return 1 / (2 * Sqrt(0.25-x))
 	}
 }
 
@@ -252,18 +248,18 @@ type DivX struct {
 // F is MulDiv(x)
 func (a DivX) F(x float32, training bool) float32 {
 	if x >= 0 {
-		return x 
+		return x
 	} else {
-		return (1 / (x-1) + 1) * -1
+		return (1/(x-1) + 1) * -1
 	}
 }
 
 // Df is MulDiv'(y), where y = MulDiv(x)
 func (a DivX) Df(x float32) float32 {
 	if x >= 0 {
-		return 1 
+		return 1
 	} else {
-		return (1 / ((x-1)*(x-1))) 
+		return (1 / ((x - 1) * (x - 1)))
 	}
 }
 
@@ -274,15 +270,15 @@ type DoubleDiv struct {
 
 // F is MulDiv(x)
 func (a DoubleDiv) F(x float32, training bool) float32 {
-	
+
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return (1 / (x+1) - 1) * -1
+		return (1/(x+1) - 1) * -1
 	} else {
-		return (1 / (x-1) + 1) * -1
+		return (1/(x-1) + 1) * -1
 	}
-	
+
 }
 
 // Df is MulDiv'(y), where y = MulDiv(x)
@@ -290,9 +286,9 @@ func (a DoubleDiv) Df(x float32) float32 {
 	if x == 0 {
 		return 0
 	} else if x > 0 {
-		return (1 / ((x+1)*(x+1))) 
+		return (1 / ((x + 1) * (x + 1)))
 	} else {
-		return (1 / ((x-1)*(x-1))) 
+		return (1 / ((x - 1) * (x - 1)))
 	}
 }
 
@@ -365,29 +361,28 @@ type Swish struct {
 
 // F is Swish(x)
 func (a Swish) F(x float32, training bool) float32 {
-// 	if a.Mem == nil {
-// 		a.Mem = map[float32]float32{}
-// 	}
-// 	ans := x * Logistic(x, 1)
-// 	if training {
-// 		a.Mem[ans] = x
-// 	}
-// 	return ans
-	
-	return x/(math.Exp(-x)+1)
+	// 	if a.Mem == nil {
+	// 		a.Mem = map[float32]float32{}
+	// 	}
+	// 	ans := x * Logistic(x, 1)
+	// 	if training {
+	// 		a.Mem[ans] = x
+	// 	}
+	// 	return ans
+
+	return x / (math.Exp(-x) + 1)
 
 }
 
 // Df is swish'(y), where y = Swish(x)
 func (a Swish) Df(y float32) float32 {
-// 	x := a.Mem[y]
-// 	delete(a.Mem, y)
-// 	sigX := Logistic(x, 1)
-// 	return y * (sigX * (1 + x*(1-sigX)))
+	// 	x := a.Mem[y]
+	// 	delete(a.Mem, y)
+	// 	sigX := Logistic(x, 1)
+	// 	return y * (sigX * (1 + x*(1-sigX)))
 	ey := math.Exp(y)
-	ey1 := ey+1
-	return (ey*(ey1+y))/(ey1*ey1)
-	
+	ey1 := ey + 1
+	return (ey * (ey1 + y)) / (ey1 * ey1)
 
 }
 
@@ -397,37 +392,36 @@ type RootSwish struct {
 
 // F is Swish(x)
 func (a RootSwish) F(x float32, training bool) float32 {
-// 	if a.Mem == nil {
-// 		a.Mem = map[float32]float32{}
-// 	}
-// 	ans := x * Logistic(x, 1)
-// 	if training {
-// 		a.Mem[ans] = x
-// 	}
-// 	return ans
-	if (x > 0) {
-		
-	return x/(math.Exp(-x)+1)
+	// 	if a.Mem == nil {
+	// 		a.Mem = map[float32]float32{}
+	// 	}
+	// 	ans := x * Logistic(x, 1)
+	// 	if training {
+	// 		a.Mem[ans] = x
+	// 	}
+	// 	return ans
+	if x > 0 {
+
+		return x / (math.Exp(-x) + 1)
 	} else {
-		return 0.5 - math.sqrt(0.25- (0.5*x))	
+		return 0.5 - math.Sqrt(0.25-(0.5*x))
 	}
 
 }
 
 // Df is swish'(y), where y = Swish(x)
 func (a RootSwish) Df(y float32) float32 {
-// 	x := a.Mem[y]
-// 	delete(a.Mem, y)
-// 	sigX := Logistic(x, 1)
-// 	return y * (sigX * (1 + x*(1-sigX)))
-	if (y > 0) {
-	ey := math.Exp(y)
-	ey1 := ey+1
-	return (ey*(ey1+y))/(ey1*ey1)
+	// 	x := a.Mem[y]
+	// 	delete(a.Mem, y)
+	// 	sigX := Logistic(x, 1)
+	// 	return y * (sigX * (1 + x*(1-sigX)))
+	if y > 0 {
+		ey := math.Exp(y)
+		ey1 := ey + 1
+		return (ey * (ey1 + y)) / (ey1 * ey1)
 	} else {
-	return 1 / (2*math.Sqrt(1-(2*y)))
+		return 1 / (2 * math.Sqrt(1-(2*y)))
 	}
-	
 
 }
 
